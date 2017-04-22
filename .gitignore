@@ -28,6 +28,7 @@
 **/Library/**/*
 
 # Ignore the contributor's local assets folder, subfolders, and files
-**/Assets/[~!]Local/*
-**/Assets/[~!]Local/**/*
-**/Assets/[~!]Local.meta
+**/Assets/*
+!**/Assets/Eggore
+!**/Assets/Eggore/*
+!**/Assets/Eggore/**/*
