@@ -9,10 +9,12 @@
     public class PlayerController : MonoBehaviour
     {
 
-        protected const int MOUSE_BUTTON = 1;
+        protected const string MOUSE_AXIS_X = "Mouse X";
 
         protected Transform focus;
         protected CharacterMotor motor;
+        protected Vector3 direction;
+        public float xSpeed = 1F;
 
         public float speed;
 
@@ -33,32 +35,35 @@
             motor = GetComponent<CharacterMotor>();
         }
 
+        protected void UpdateRotation()
+        {
+            //transform.RotateAround(Input.GetAxis(MOUSE_AXIS_X), xSpeed);
+        }
+
         protected void Update()
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            UpdateRotation();
+            if (Input.GetKeyDown(KeyCode.W) == true)
             {
-                motor.Destination = hit.point;
+                motor.Steer(transform.forward);
             }
+            if (Input.GetKeyDown(KeyCode.A) == true)
+            {
+                direction = Vector3.left;
+            }
+            if (Input.GetKeyDown(KeyCode.S) == true)
+            {
+                direction = Vector3.back;
+            }
+            if (Input.GetKeyDown(KeyCode.D) == true)
+            {
+                direction = Vector3.right;
+            }
+        }
 
-            if (Input.GetKey(KeyCode.W) == true)
-            {
-                Debug.Log("Pressing W");
-                transform.Translate(Vector3.forward * Time.deltaTime * speed);
-            }
-            if (Input.GetKey(KeyCode.A) == true)
-            {
-                transform.Translate(Vector3.left * Time.deltaTime * speed);
-            }
-            if (Input.GetKey(KeyCode.S) == true)
-            {
-                transform.Translate(Vector3.back * Time.deltaTime * speed);
-            }
-            if (Input.GetKey(KeyCode.D) == true)
-            {
-                transform.Translate(Vector3.right * Time.deltaTime * speed);
-            }
+        public Vector3 getDirection()
+        {
+            return direction;
         }
 
     }
