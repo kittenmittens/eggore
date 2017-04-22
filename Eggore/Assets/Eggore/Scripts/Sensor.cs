@@ -8,7 +8,7 @@
 
 		// Use this for initialization
 		void Start () {
-			//		ai = transform.parent.gameObject.GetComponent<AIController> ();
+			
 		}
 
 		void OnTriggerEnter (Collider other) 

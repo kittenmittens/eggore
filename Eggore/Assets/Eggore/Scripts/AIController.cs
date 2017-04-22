@@ -8,11 +8,9 @@
 	[RequireComponent(typeof(CharacterMotor))]
 	public class AIController : MonoBehaviour
 	{
-		public enum State {IDLE, ATTACK};
-		private State activeState;
+		private const float ATTACK_THRESHOLD = 2.0F;
 
 		protected CharacterMotor motor;
-		protected GameObject player;
 
 		protected void Awake()
 		{
@@ -28,9 +26,27 @@
 			
 		}
 
+		protected void attack()
+		{
+			Debug.Log ("Attack player");
+			// Attack Logic
+		}
+
+		protected bool canAttack(GameObject player)
+		{
+			Vector3 offset = player.transform.position - transform.position;
+			float sqrLen = offset.sqrMagnitude;
+			return (sqrLen <= (ATTACK_THRESHOLD * ATTACK_THRESHOLD));
+		}
+
 		public void onPlayerDetected(GameObject player)
 		{
-			motor.Destination = player.transform.position;
+			// Check if player is close enough to attack, else move towards player
+			if (canAttack(player)) {
+				attack ();
+			} else {
+				motor.Destination = player.transform.position;
+			}
 		}
 
 		public void onPlayerEscape()
