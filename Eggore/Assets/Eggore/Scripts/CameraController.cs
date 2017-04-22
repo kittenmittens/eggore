@@ -31,6 +31,22 @@
 
         private new Camera camera;
 
+        protected PlayerController Target
+        {
+            get
+            {
+                if (target == null)
+                {
+                    GameObject player = GameObject.FindWithTag("Player");
+                    if (player != null)
+                    {
+                        target = player.GetComponent<PlayerController>();
+                    }
+                }
+                return target;
+            }
+        }
+
         protected void Awake()
         {
             if (camera == null)
@@ -38,19 +54,10 @@
                 camera = GetComponent<Camera>();
             }
 
-            if (target == null)
-            {
-                GameObject player = GameObject.FindWithTag("Player");
-                if (player != null)
-                {
-                    target = player.GetComponent<PlayerController>();
-                }
-            }
-
             pitch = camera.transform.rotation.eulerAngles[0];
             yaw = camera.transform.rotation.eulerAngles[1];
         }
-
+      
         protected float ClampAngle(float angle)
         {
             angle = angle < -360F ? angle + 360F : angle;
@@ -60,7 +67,7 @@
 
         protected void LateUpdate()
         {
-            if (target)
+            if (Target)
             {
                 if (Input.GetMouseButton(MOUSE_BUTTON))
                 {
@@ -76,7 +83,7 @@
                 }
 
                 distance = Mathf.Clamp(distance - Input.GetAxis(MOUSE_SCROLL) * scrollSpeed, distanceMin, distanceMax);
-                camera.transform.position = camera.transform.rotation * Vector3.back * distance + target.Focus.position;
+                camera.transform.position = camera.transform.rotation * Vector3.back * distance + Target.Focus.position;
             }
         }
 
