@@ -10,13 +10,12 @@
     {
 
         protected const string MOUSE_AXIS_X = "Mouse X";
+        
+        public float turnSpeed = 1F;
 
         protected Transform focus;
         protected CharacterMotor motor;
         protected Vector3 direction;
-        public float xSpeed = 1F;
-
-        public float speed;
 
         public Transform Focus
         {
@@ -35,35 +34,35 @@
             motor = GetComponent<CharacterMotor>();
         }
 
-        protected void UpdateRotation()
-        {
-            //transform.RotateAround(Input.GetAxis(MOUSE_AXIS_X), xSpeed);
-        }
-
         protected void Update()
         {
-            UpdateRotation();
-            if (Input.GetKeyDown(KeyCode.W) == true)
-            {
-                motor.Steer(transform.forward);
-            }
-            if (Input.GetKeyDown(KeyCode.A) == true)
-            {
-                direction = Vector3.left;
-            }
-            if (Input.GetKeyDown(KeyCode.S) == true)
-            {
-                direction = Vector3.back;
-            }
-            if (Input.GetKeyDown(KeyCode.D) == true)
-            {
-                direction = Vector3.right;
-            }
-        }
+            Vector3 direction = Vector3.zero;
 
-        public Vector3 getDirection()
-        {
-            return direction;
+            if (Input.GetKey(KeyCode.W) == true)
+            {
+                direction += transform.forward;
+            }
+            if (Input.GetKey(KeyCode.S) == true)
+            {
+                direction -= transform.forward;
+            }
+
+            if (Input.GetKey(KeyCode.D) == true)
+            {
+                direction += transform.right;
+            }
+            if (Input.GetKey(KeyCode.A) == true)
+            {
+                direction -= transform.right;
+            }
+
+            transform.Rotate(Vector3.up, Input.GetAxis(MOUSE_AXIS_X) * turnSpeed);
+            if (direction.sqrMagnitude > 0F)
+            {
+                motor.Steer(direction.normalized);
+                return;
+            }
+            motor.Stop();
         }
 
     }

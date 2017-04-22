@@ -8,13 +8,13 @@
     [RequireComponent(typeof(Camera))]
     public class CameraController : MonoBehaviour
     {
-
-        protected const int MOUSE_BUTTON = 0;
+        
         protected const string MOUSE_AXIS_X = "Mouse X";
         protected const string MOUSE_AXIS_Y = "Mouse Y";
         protected const string MOUSE_SCROLL = "Mouse ScrollWheel";
 
         public PlayerController target;
+        public bool freeCamera = false;
         public float distance = 5F;
         public float distanceMin = 1F;
         public float distanceMax = 10F;
@@ -55,7 +55,10 @@
             }
 
             pitch = camera.transform.rotation.eulerAngles[0];
-            yaw = camera.transform.rotation.eulerAngles[1];
+            if (freeCamera)
+            {
+                yaw = camera.transform.rotation.eulerAngles[1];
+            }
         }
       
         protected float ClampAngle(float angle)
@@ -69,18 +72,17 @@
         {
             if (Target)
             {
-                if (Input.GetMouseButton(MOUSE_BUTTON))
+                if (freeCamera)
                 {
                     yaw += Input.GetAxis(MOUSE_AXIS_X) * xSpeed * distance;
-                    pitch -= Input.GetAxis(MOUSE_AXIS_Y) * ySpeed;
-                    pitch = ClampAngle(pitch);
-                    camera.transform.rotation = Quaternion.Euler(pitch, yaw, 0F);
                 }
                 else
                 {
-                    yaw = Mathf.LerpAngle(yaw, target.Focus.eulerAngles.y, followSpeed * Time.deltaTime);
-                    camera.transform.rotation = Quaternion.Euler(pitch, yaw, 0F);
+                    yaw = Target.transform.rotation.eulerAngles.y;
                 }
+                pitch -= Input.GetAxis(MOUSE_AXIS_Y) * ySpeed;
+                pitch = ClampAngle(pitch);
+                camera.transform.rotation = Quaternion.Euler(pitch, yaw, 0F);
 
                 distance = Mathf.Clamp(distance - Input.GetAxis(MOUSE_SCROLL) * scrollSpeed, distanceMin, distanceMax);
                 camera.transform.position = camera.transform.rotation * Vector3.back * distance + Target.Focus.position;
