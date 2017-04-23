@@ -26,11 +26,7 @@
 
 		void OnTriggerExit (Collider other)
 		{
-			if (other.gameObject.tag == "Player")
-			{
-				// Stop moving
-				ai.onPlayerEscape ();
-			}
+			checkPlayerEscaped(other);
 		}
 
 		// Update is called once per frame
@@ -38,12 +34,20 @@
 
 		}
 
-		// Check if the given collider is the player, and if visible call AI method
 		protected void checkPlayerDetected(Collider other)
 		{
 			if (other.gameObject.tag == "Player" && playerIsVisible(other)) 
 			{
 				ai.onPlayerDetected (other.gameObject);
+			}
+		}
+
+		protected void checkPlayerEscaped(Collider other)
+		{
+			if (other.gameObject.tag == "Player")
+			{
+				// Stop moving
+				ai.onPlayerEscape ();
 			}
 		}
 
@@ -59,8 +63,6 @@
 				{
 					return true;
 				}
-				
-
 			}
 			return false;
 		}
