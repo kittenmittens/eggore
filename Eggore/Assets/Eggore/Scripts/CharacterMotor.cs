@@ -9,7 +9,7 @@
     public class CharacterMotor : MonoBehaviour
     {
 
-        protected const float SQR_THRESHOLD = 10.0F;
+        protected const float SQR_THRESHOLD = 2.0F;
 
         public float speed;
         public float turnSpeed;
