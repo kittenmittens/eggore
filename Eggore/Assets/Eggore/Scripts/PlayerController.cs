@@ -82,6 +82,14 @@
             animator.transform.localRotation = Quaternion.Lerp(animator.transform.localRotation, tiltRotation, tiltSpeed * Time.deltaTime);
         }
 
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Pick Up"))
+            {
+                other.gameObject.SetActive(false);
+            }
+        }
+
     }
 
 }
