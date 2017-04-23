@@ -10,12 +10,17 @@
     {
 
         protected const string MOUSE_AXIS_X = "Mouse X";
-        
+
+        public float tilt = 22.5F;
+        public float tiltSpeed = 3F;
         public float turnSpeed = 1F;
 
+        protected Animator animator;
         protected Transform focus;
         protected CharacterMotor motor;
-        protected Vector3 direction;
+        protected Vector3 moveDirection;
+        protected Vector3 tiltDirection;
+        protected Quaternion tiltRotation;
 
         public Transform Focus
         {
@@ -31,38 +36,50 @@
 
         protected void Awake()
         {
+            animator = GetComponentInChildren<Animator>();
             motor = GetComponent<CharacterMotor>();
         }
 
         protected void Update()
         {
-            Vector3 direction = Vector3.zero;
+            moveDirection = Vector3.zero;
+            tiltDirection = Vector3.zero;
+            transform.Rotate(Vector3.up, Input.GetAxis(MOUSE_AXIS_X) * turnSpeed);
 
             if (Input.GetKey(KeyCode.W) == true)
             {
-                direction += transform.forward;
+                moveDirection += transform.forward;
+                tiltDirection += Vector3.forward;
             }
             if (Input.GetKey(KeyCode.S) == true)
             {
-                direction -= transform.forward;
+                moveDirection -= transform.forward;
+                tiltDirection -= Vector3.forward;
             }
 
             if (Input.GetKey(KeyCode.D) == true)
             {
-                direction += transform.right;
+                moveDirection += transform.right;
+                tiltDirection += Vector3.right;
             }
             if (Input.GetKey(KeyCode.A) == true)
             {
-                direction -= transform.right;
+                moveDirection -= transform.right;
+                tiltDirection -= Vector3.right;
             }
 
-            transform.Rotate(Vector3.up, Input.GetAxis(MOUSE_AXIS_X) * turnSpeed);
-            if (direction.sqrMagnitude > 0F)
+            if (moveDirection.sqrMagnitude > 0F)
             {
-                motor.Steer(direction.normalized);
-                return;
+                motor.Steer(moveDirection.normalized);
+                tiltRotation = Quaternion.AngleAxis(tilt, Vector3.Cross(Vector3.up, tiltDirection));
             }
-            motor.Stop();
+            else
+            {
+                motor.Stop();
+                tiltRotation = Quaternion.identity;
+            }            
+
+            animator.transform.localRotation = Quaternion.Lerp(animator.transform.localRotation, tiltRotation, tiltSpeed * Time.deltaTime);
         }
 
     }
