@@ -39,14 +39,27 @@
 			return (sqrLen <= (ATTACK_THRESHOLD * ATTACK_THRESHOLD));
 		}
 
+		protected bool playerVisible(GameObject player)
+		{
+			int playerLayer = 8;
+			int layerMask = 1 << playerLayer; // Create mask of colliders except the player's
+			return Physics.Raycast(transform.position, player.transform.position, Mathf.Infinity, layerMask);
+		}
+
 		public void onPlayerDetected(GameObject player)
 		{
-			// Check if player is close enough to attack, else move towards player
-			if (canAttack(player)) {
-				attack ();
-			} else {
-				motor.Destination = player.transform.position;
-			}
+			
+			// if (playerVisible(player)) 
+			// {
+				if (canAttack(player)) 
+				{
+					attack ();
+				} 
+				else 
+				{
+					motor.Destination = player.transform.position;
+				}
+			// }
 		}
 
 		public void onPlayerEscape()
