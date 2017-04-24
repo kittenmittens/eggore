@@ -13,7 +13,8 @@
         protected const string MOUSE_AXIS_Y = "Mouse Y";
         protected const string MOUSE_SCROLL = "Mouse ScrollWheel";
 
-        public PlayerController target;
+        public CameraFocus target;
+        public Vector3 offset;
         public bool freeCamera = false;
         public float distance = 5F;
         public float distanceMin = 1F;
@@ -31,7 +32,7 @@
 
         private new Camera camera;
 
-        protected PlayerController Target
+        protected CameraFocus Target
         {
             get
             {
@@ -40,7 +41,7 @@
                     GameObject player = GameObject.FindWithTag("Player");
                     if (player != null)
                     {
-                        target = player.GetComponent<PlayerController>();
+                        target = player.GetComponentInChildren<CameraFocus>();
                     }
                 }
                 return target;
@@ -85,7 +86,7 @@
                 camera.transform.rotation = Quaternion.Euler(pitch, yaw, 0F);
 
                 distance = Mathf.Clamp(distance - Input.GetAxis(MOUSE_SCROLL) * scrollSpeed, distanceMin, distanceMax);
-                camera.transform.position = camera.transform.rotation * Vector3.back * distance + Target.Focus.position;
+                camera.transform.position = camera.transform.rotation * Vector3.back * distance + Target.transform.position + offset;
             }
         }
 

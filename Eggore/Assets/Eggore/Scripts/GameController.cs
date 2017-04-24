@@ -10,17 +10,25 @@
         
         protected PlayerController player;
 
+        protected void SpawnPlayer()
+        {
+            player = Instantiate(playerPrefab);
+            player.transform.position = playerSpawn.position;
+            player.transform.rotation = playerSpawn.rotation;
+        }
 
         protected void Start()
         {
             SpawnPlayer();
         }
 
-        protected void SpawnPlayer()
+        protected void Update()
         {
-            player = Instantiate(playerPrefab);
-            player.transform.position = playerSpawn.position;
-            player.transform.rotation = playerSpawn.rotation;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                player.SwitchRagdoll();
+            }
+
         }
 
     }
